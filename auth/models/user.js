@@ -28,6 +28,17 @@ class userSchema {
             }
         });
     }
+    static findAll(result) {
+        dbConn.query("SELECT * FROM users", function (err, res) {
+            if (err) {
+                console.error("error: ", err);
+                result(err, 'Error');
+            }
+            else {
+                result(null, res);
+            }
+        });
+    }
 }
 
 const User = userSchema;

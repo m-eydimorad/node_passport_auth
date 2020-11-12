@@ -5,14 +5,16 @@ let roles = (function () {
     ac.grant("basic")
         .readOwn("profile")
         .updateOwn("profile")
-
-    ac.grant("supervisor")
-        .extend("basic")
-        .readAny("profile")
+        .readAny("article")
 
     ac.grant("admin")
         .extend("basic")
-        .extend("supervisor")
+
+        .readAny("article")
+        .updateAny("article")
+        .deleteAny("article")
+
+        .readAny("profile")
         .updateAny("profile")
         .deleteAny("profile")
 

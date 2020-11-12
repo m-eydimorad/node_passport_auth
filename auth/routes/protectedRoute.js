@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const roles = require('../roles')
+const UserModel = require('../models/user')
 
 const jwtMiddleware = require('../middlewares/jwtMiddleware')
 
 router.get('/protected',
-    jwtMiddleware.jwtAuthenticate(),
+    jwtMiddleware.jwtAuthenticate(), roles.grantAccess('readOwn', 'profile'),
     (req, res) => {
         const { user } = req;
 
@@ -15,9 +16,10 @@ router.get('/protected',
 router.get('/protectedadmin',
     jwtMiddleware.jwtAuthenticate(), roles.grantAccess('readAny', 'profile'),
     (req, res) => {
-        const { user } = req;
+        UserModel.findAll(function (err, users) {
+            res.status(200).send(users);
+        });
 
-        res.status(200).send({ user });
     });
 
 module.exports = router

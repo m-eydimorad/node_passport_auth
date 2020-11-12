@@ -26,7 +26,7 @@ router.post('/login', (req, res) => {
             const payload = {
                 email: user.email,
                 role: user.role,
-                expires: Date.now() + parseInt(60000),
+                expires: Date.now() + parseInt(120000),
             };
             /** assigns payload to req.user */
             req.login(payload, { session: false }, (error) => {
@@ -56,18 +56,18 @@ registerUser = async (req, res, role) => {
     // https://pthree.org/wp-content/uploads/2016/06/bcrypt.png
     const hashCost = 10;
 
-    // try {
-    const passwordHash = await bcrypt.hash(password, hashCost);
-    const userDocument = new UserModel({ email, passwordHash, role: role });
-    UserModel.Create(userDocument, function (err, user) {
-        if (err)
-            res.send(err);
-        res.json({ error: false, message: "User added successfully!", data: user });
-    });
+    try {
+        const passwordHash = await bcrypt.hash(password, hashCost);
+        const userDocument = new UserModel({ email, passwordHash, role: role });
+        UserModel.Create(userDocument, function (err, user) {
+            if (err)
+                res.send(err);
+            res.json({ error: false, message: "User added successfully!", data: user });
+        });
 
-    // } catch (error) {
-    //     res.status(400).send({
-    //         error: 'req body should take the form { email, password }',
-    //     });
-    // }
+    } catch (error) {
+        res.status(400).send({
+            error: 'req body should take the form { email, password }',
+        });
+    }
 }
