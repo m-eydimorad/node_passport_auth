@@ -9,7 +9,6 @@ class userSchema {
     static Create(user, result) {
         dbConn.query("INSERT INTO users set ?", user, function (err, res) {
             if (err) {
-                console.log("error: ", err);
                 result(err, 'Error');
             }
             else {

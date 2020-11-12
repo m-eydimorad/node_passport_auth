@@ -15,9 +15,9 @@ passport.use(new JWTStrategy({
     (jwtPayload, done) => {
 
         if (Date.now() > jwtPayload.expires) {
+
             return done('token expired');
         }
-
         return done(null, jwtPayload);
     }
 ));
