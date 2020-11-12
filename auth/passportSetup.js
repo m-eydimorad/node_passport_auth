@@ -21,18 +21,25 @@ passport.use(new JWTStrategy({
         return done(null, jwtPayload);
     }
 ));
-passport.use(new LocalStrategy(
-    async (username, password, done) => {
-        const userDocument = UserModel.findOne({ username: username });
-        if (!userDocument) {
-            done('User not found')
-        }
-        const passwordsMatch = await bcrypt.compare(password, userDocument.passwordHash);
-        if (passwordsMatch) {
-            return done(null, userDocument);
-        } else {
-            return done('Incorrect Username / Password');
-        }
+passport.use(new LocalStrategy({ usernameField: "email" },
+    async (email, password, done) => {
+        UserModel.findOne({ email: email }, async (error, user) => {
+            if (error) {
+                return done('Error occurred in get user')
+            }
+            const userDocument = user;
+            if (!userDocument) {
+                return done('User not found')
+            }
+            const passwordsMatch = await bcrypt.compare(password, userDocument.passwordHash);
+            if (passwordsMatch) {
+                return done(null, userDocument);
+            } else {
+                return done('Incorrect Email / Password');
+            }
+        });
+
+
 
     }));
 

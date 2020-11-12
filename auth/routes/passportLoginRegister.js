@@ -24,7 +24,7 @@ router.post('/login', (req, res) => {
             }
             /** This is what ends up in our JWT */
             const payload = {
-                username: user.username,
+                email: user.email,
                 role: user.role,
                 expires: Date.now() + parseInt(60000),
             };
@@ -36,6 +36,7 @@ router.post('/login', (req, res) => {
                 }
                 /** generate a signed json web token and return it in the response */
                 const token = jwt.sign(JSON.stringify(payload), "ABCDEFG");
+
                 /** assign our jwt to the cookie */
                 res.cookie('jwt', token, { httpOnly: true, secure: true });
                 res.status(200).send({ token });
@@ -49,22 +50,24 @@ router.post('/login', (req, res) => {
 module.exports = router;
 
 registerUser = async (req, res, role) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     // authentication will take approximately 13 seconds
     // https://pthree.org/wp-content/uploads/2016/06/bcrypt.png
     const hashCost = 10;
 
-    try {
-        const passwordHash = await bcrypt.hash(password, hashCost);
-        const userDocument = new UserModel({ username, passwordHash, role: role });
-        UserModel.Create(userDocument);
+    // try {
+    const passwordHash = await bcrypt.hash(password, hashCost);
+    const userDocument = new UserModel({ email, passwordHash, role: role });
+    UserModel.Create(userDocument, function (err, user) {
+        if (err)
+            res.send(err);
+        res.json({ error: false, message: "User added successfully!", data: user });
+    });
 
-        res.status(200).send({ username });
-
-    } catch (error) {
-        res.status(400).send({
-            error: 'req body should take the form { username, password }',
-        });
-    }
+    // } catch (error) {
+    //     res.status(400).send({
+    //         error: 'req body should take the form { email, password }',
+    //     });
+    // }
 }
