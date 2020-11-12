@@ -1,9 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('passport');
+const roles = require('../roles')
+
+const jwtMiddleware = require('../middlewares/jwtMiddleware')
 
 router.get('/protected',
-    passport.authenticate('jwt', { session: false }),
+    jwtMiddleware.jwtAuthenticate(),
+    (req, res) => {
+        const { user } = req;
+
+        res.status(200).send({ user });
+    });
+
+router.get('/protectedadmin',
+    jwtMiddleware.jwtAuthenticate(), roles.grantAccess('readAny', 'profile'),
     (req, res) => {
         const { user } = req;
 

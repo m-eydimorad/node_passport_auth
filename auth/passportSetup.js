@@ -4,8 +4,6 @@ const passportJWT = require('passport-jwt');
 const JWTStrategy = passportJWT.Strategy;
 const bcrypt = require('bcrypt');
 
-// const { secret } = require('./keys');
-
 const UserModel = require('./models/user');
 
 passport.use(new JWTStrategy({
@@ -17,7 +15,7 @@ passport.use(new JWTStrategy({
     (jwtPayload, done) => {
 
         if (Date.now() > jwtPayload.expires) {
-            return done('jwt expired');
+            return done('token expired');
         }
 
         return done(null, jwtPayload);

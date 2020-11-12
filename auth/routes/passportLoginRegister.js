@@ -40,7 +40,7 @@ router.post('/login', (req, res) => {
             const payload = {
                 username: user.username,
                 role: user.role,
-                expires: Date.now() + parseInt(20000),
+                expires: Date.now() + parseInt(60000),
             };
             /** assigns payload to req.user */
             req.login(payload, { session: false }, (error) => {
@@ -57,5 +57,7 @@ router.post('/login', (req, res) => {
         },
     )(req, res);
 });
+
+
 
 module.exports = router;

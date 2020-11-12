@@ -5,13 +5,13 @@ class userSchema {
     constructor(user) {
         this.username = user.username;
         this.passwordHash = user.passwordHash;
-        this.role = "admin"
+        this.role = "basic"
     }
     save() {
         users.push({ username: this.username, passwordHash: this.passwordHash, role: this.role })
     }
     static findOne(query) {
-        return users.find(a => a.username == query.username)
+        return users.find(a => a.username.toLowerCase() == query.username.toLowerCase())
     }
     static find() {
         return users;
