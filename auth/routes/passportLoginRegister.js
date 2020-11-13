@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user');
 const router = express.Router();
-
+const googleLogin = require('./googleLogin')
 router.post('/registerAdmin', async (req, res) => {
     await registerUser(req, res, "admin");
 });
@@ -43,7 +43,7 @@ router.post('/login', (req, res) => {
         },
     )(req, res);
 });
-
+router.post("/google", googleLogin.google)
 
 
 module.exports = router;

@@ -10,7 +10,8 @@ const passport = require('passport');
 exports.jwtAuthenticate = function () {
     return (req, res, next) => {
         passport.authenticate('jwt', { session: false }, (error, user) => {
-            if (error) {
+            console.log("hi" + error + user)
+            if (error || !user) {
                 res.status(401).json({ error });
                 return;
             }

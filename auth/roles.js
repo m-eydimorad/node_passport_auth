@@ -23,7 +23,6 @@ let roles = (function () {
 
 exports.grantAccess = function (action, resource) {
     return async (req, res, next) => {
-        console.log(req)
         try {
             const permission = roles.can(req.user.role)[action](resource);
             if (!permission.granted) {
